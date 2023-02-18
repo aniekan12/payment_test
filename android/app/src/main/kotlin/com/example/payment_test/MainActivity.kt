@@ -1,6 +1,7 @@
 package com.example.payment_test
 
 import android.app.Activity
+import android.app.Instrumentation.ActivityResult
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -13,19 +14,36 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.gson.Gson
+import io.flutter.embedding.android.FlutterFragmentActivity
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
 
     private val CHANNEL = "flutterwave.irecharge/payments";
 
+//    private val startActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//            activityResult ->
+//        val result = activityResult?.data
+//        val parametersResult = result?.getStringExtra("PARAMETERS_EXTRA")
+//    }
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+//        val intent: Intent = Intent("com.flutterwave.pos.PARAMETERS")
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//            activityResult ->
+//            val result = activityResult?.data
+//            val parametersResult = result?.getStringExtra("PARAMETERS_EXTRA")
+//        }.launch(intent)
+
+
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             CHANNEL
         ).setMethodCallHandler { call, result ->
             if (call.method.equals("processTransactions")) {
+
                 val flutterwave = processTransactions();
 
                 if (flutterwave != null) {
@@ -60,8 +78,8 @@ class MainActivity: FlutterActivity() {
 
     }
 
-    private fun <I, O> Activity.registerForActivityResult(
-        contract: ActivityResultContract<I, O>,
-        callback: ActivityResultCallback<O>
-    ) = (this as ComponentActivity).registerForActivityResult(contract, callback)
+//    private fun <I, O> Activity.registerForActivityResult(
+//        contract: ActivityResultContract<I, O>,
+//        callback: ActivityResultCallback<O>
+//    ) = (this as ComponentActivity).registerForActivityResult(contract, callback)
 }
