@@ -33,19 +33,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const platform = MethodChannel('flutterwave.irecharge/payments');
 
-  String _flutterwave = 'Unknown flutterwave.';
+  String _paystack = 'Unknown paystack.';
 
-  Future<void> _processTransaction() async {
-    String flutterwave;
+  Future<void> _makePayment() async {
+    String paystack;
     try {
-      var result = await platform.invokeMethod('processTransactions');
-      flutterwave = 'process transactions $result % .';
+      var result = await platform
+          .invokeMethod('processTransactions', {'amount': 50000000});
+      paystack = 'process transactions $result % .';
     } on PlatformException catch (e) {
-      flutterwave = "Failed to process transaction: '${e.message}'.";
+      paystack = "Failed to process transaction: '${e.message}'.";
     }
 
     setState(() {
-      _flutterwave = flutterwave;
+      _paystack = paystack;
     });
   }
 
@@ -60,8 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextButton(
-                onPressed: _processTransaction,
-                child: Text('Process Transaction')),
+                onPressed: _makePayment, child: Text('Process Transaction')),
           ],
         ),
       ),
