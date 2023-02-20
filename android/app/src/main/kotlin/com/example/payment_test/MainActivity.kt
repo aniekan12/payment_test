@@ -13,11 +13,18 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.gson.Gson
+import io.flutter.embedding.android.FlutterFragmentActivity
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
 
     private val CHANNEL = "flutterwave.irecharge/payments";
+    val startActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            val result = activityResult?.data
+            val transactionData = result?.getStringExtra("TRANSACTION_EXTRA")
+
+        }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -41,12 +48,7 @@ class MainActivity: FlutterActivity() {
 
     private fun processTransactions() {
 
-        val startActivityForResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-                val result = activityResult?.data
-                val transactionData = result?.getStringExtra("TRANSACTION_EXTRA")
 
-            }
 
         val intent = Intent("com.flutterwave.pos.TRANSACTION")
         val paymentRequest = FlutterwaveTransaction(
@@ -59,9 +61,4 @@ class MainActivity: FlutterActivity() {
         startActivityForResult.launch(intent)
 
     }
-
-    private fun <I, O> Activity.registerForActivityResult(
-        contract: ActivityResultContract<I, O>,
-        callback: ActivityResultCallback<O>
-    ) = (this as ComponentActivity).registerForActivityResult(contract, callback)
 }

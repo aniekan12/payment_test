@@ -1,5 +1,7 @@
 package com.example.payment_test
 
-class FlutterwaveTransaction(amount: String, shouldPrint: Boolean, transactionType: List<String>) {
-
-}
+data class FlutterwaveTransaction(
+    val amount: String,
+    val shouldPrint: Boolean,
+    val transactionType: List<String>
+    )
